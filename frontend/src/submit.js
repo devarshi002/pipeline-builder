@@ -30,6 +30,7 @@ Is DAG: ${data.is_dag}`
       console.error("Error:", error);
       alert("Error connecting to backend");
     }
+    console.log("CALLING:", "https://pipeline-builder-tw15.onrender.com/pipelines/parse");
   };
 
   return (
