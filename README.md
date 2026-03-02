@@ -132,7 +132,7 @@ JSON Response → Displayed in UI
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/<your-username>/pipeline-builder.git
+git clone https://github.com/devarshi002/pipeline-builder.git
 cd pipeline-builder
 ```
 
