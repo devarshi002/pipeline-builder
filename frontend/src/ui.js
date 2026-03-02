@@ -2,31 +2,30 @@
 // Displays the drag-and-drop UI
 // --------------------------------------------------
 
-import { useState, useRef, useCallback } from "react";
-import ReactFlow, { Controls, Background, MiniMap } from "reactflow";
-import { useStore } from "./store";
-import { shallow } from "zustand/shallow";
-import { InputNode } from "./nodes/inputNode";
-import { LLMNode } from "./nodes/llmNode";
-import { OutputNode } from "./nodes/outputNode";
-import { TextNode } from "./nodes/textNode";
+import { useState, useRef, useCallback } from 'react';
+import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
+import { useStore } from './store';
+import { shallow } from 'zustand/shallow';
+import { InputNode } from './nodes/inputNode';
+import { LLMNode } from './nodes/llmNode';
+import { OutputNode } from './nodes/outputNode';
+import { TextNode } from './nodes/textNode';
+import { MathNode } from './nodes/mathNode';
+import { ConditionNode } from './nodes/conditionNode';
+import { APINode } from './nodes/apiNode';
+import { FilterNode } from './nodes/filterNode';
+import { LoggerNode } from './nodes/loggerNode';
 
-import { MathNode } from "./nodes/mathNode";
-import { ConditionNode } from "./nodes/conditionNode";
-import { APINode } from "./nodes/apiNode";
-import { FilterNode } from "./nodes/filterNode";
-import { LoggerNode } from "./nodes/loggerNode";
-
-import "reactflow/dist/style.css";
+import 'reactflow/dist/style.css';
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
+
 const nodeTypes = {
   customInput: InputNode,
   llm: LLMNode,
   customOutput: OutputNode,
   text: TextNode,
-
   math: MathNode,
   condition: ConditionNode,
   api: APINode,
@@ -47,6 +46,7 @@ const selector = (state) => ({
 export const PipelineUI = () => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
+
   const {
     nodes,
     edges,
@@ -58,25 +58,23 @@ export const PipelineUI = () => {
   } = useStore(selector, shallow);
 
   const getInitNodeData = (nodeID, type) => {
-    let nodeData = { id: nodeID, nodeType: `${type}` };
-    return nodeData;
+    return { id: nodeID, nodeType: `${type}` };
   };
 
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
 
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      if (event?.dataTransfer?.getData("application/reactflow")) {
+      const reactFlowBounds =
+        reactFlowWrapper.current.getBoundingClientRect();
+
+      if (event?.dataTransfer?.getData('application/reactflow')) {
         const appData = JSON.parse(
-          event.dataTransfer.getData("application/reactflow"),
+          event.dataTransfer.getData('application/reactflow')
         );
         const type = appData?.nodeType;
 
-        // check if the dropped element is valid
-        if (typeof type === "undefined" || !type) {
-          return;
-        }
+        if (!type) return;
 
         const position = reactFlowInstance.project({
           x: event.clientX - reactFlowBounds.left,
@@ -84,6 +82,7 @@ export const PipelineUI = () => {
         });
 
         const nodeID = getNodeID(type);
+
         const newNode = {
           id: nodeID,
           type,
@@ -94,12 +93,12 @@ export const PipelineUI = () => {
         addNode(newNode);
       }
     },
-    [reactFlowInstance],
+    [reactFlowInstance, addNode, getNodeID] // ✅ Fixed dependency array
   );
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
-    event.dataTransfer.dropEffect = "move";
+    event.dataTransfer.dropEffect = 'move';
   }, []);
 
   return (
@@ -107,10 +106,10 @@ export const PipelineUI = () => {
       <div
         ref={reactFlowWrapper}
         style={{
-          width: "100%",
-          height: "75vh",
-          background: "#020617",
-          borderTop: "1px solid #1e293b",
+          width: '100%',
+          height: '75vh',
+          background: '#020617',
+          borderTop: '1px solid #1e293b',
         }}
       >
         <ReactFlow
