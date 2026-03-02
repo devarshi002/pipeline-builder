@@ -6,18 +6,24 @@ export const SubmitButton = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await fetch("https://pipeline-builder-tw15.onrender.com/parse", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://pipeline-builder-tw15.onrender.com/parse",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ nodes, edges }),
         },
-        body: JSON.stringify({ nodes, edges }),
-      });
+      );
 
       const data = await res.json();
 
       alert(
-        `Pipeline Info:\nNodes: ${data.num_nodes}\nEdges: ${data.num_edges}\nIs DAG: ${data.is_dag}`,
+        `Pipeline Info:
+Nodes: ${data.num_nodes}
+Edges: ${data.num_edges}
+Is DAG: ${data.is_dag}`,
       );
     } catch (error) {
       console.error(error);
